@@ -15,6 +15,11 @@ Vagrant.configure("2") do |config|
   config.vm.synced_folder "./plugins", "/opt/plugins/"
 
   # Using Puppet to provision our PMBox
-  config.vm.provision :puppet
-
+  #config.vm.provision :puppet
+  config.vm.provision :puppet do |puppet|
+  	puppet.manifests_path = "manifests"
+	puppet.module_path = 'manifests'
+	puppet.options="--verbose --debug"
+  	puppet.manifest_file = "default.pp"
+end
 end

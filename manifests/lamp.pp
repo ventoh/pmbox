@@ -9,6 +9,7 @@ class lamp {
 		command => '/usr/bin/mysqladmin -u root password processmaker || /bin/true',
 		require => Package[$mysql_require]
 	}
+
 	# Ensure the service is running
 	service { 'mysql':
 		ensure    => running,
@@ -16,19 +17,20 @@ class lamp {
 		require   => Package[$mysql_require], 
 	}
 
-	# PHP, specifically PHP5
+	# PHP, specifically PHP5.6
 	$php_require = [
-		'php5', 
-		'php5-mysql', 
-		'libapache2-mod-php5', 
-		'php5-gd', 
-		'php5-ldap', 
-		'php5-curl', 
-		'php5-cli', 
-		'php5-mcrypt',
-		'php-soap',
-		'php5-pgsql',
-		'php5-odbc'
+		'php5.6',
+		'php5.6-common',
+		'php5.6-mbstring',
+		'php5.6-mcrypt',
+		'php5.6-mysql',
+		'php5.6-xml',
+		'php5.6-gd',
+		'php5.6-ldap',
+		'php5.6-curl',
+		'php5.6-cli',
+		'php5.6-soap',
+		'libapache2-mod-php5.6'
 	]
 	# Install packages
 	package { $php_require: ensure => installed, require => Service['mysql'] }
@@ -52,4 +54,16 @@ class lamp {
 		require => Package[$apache_require],
 	}
 
+
+	# disable old php5.5
+	exec {
+		'disable-php5':
+		command => '/usr/sbin/a2dismod php5'
+	}
+
+	# enable php5.6
+	exec {
+		'enable-php5.6':
+		command => '/usr/sbin/a2enmod php5.6'
+	}
 }

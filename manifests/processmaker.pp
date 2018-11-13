@@ -11,13 +11,13 @@ class processmaker {
 	# Get ProcessMaker and extract it
 	exec {
 		'get_processmaker':
-			command => "/usr/bin/wget -P /opt http://ufpr.dl.sourceforge.net/project/processmaker/ProcessMaker/2.0/2.0.45/processmaker-2.0.45.tar.gz",
-			creates => "/opt/processmaker-2.0.45.tar.gz",
+			command => "/usr/bin/wget -P /opt https://sourceforge.net/projects/processmaker/files/ProcessMaker/3.3.0/processmaker-3.3.0-community.tar.gz",
+			creates => "/opt/processmaker-3.3.0-community.tar.gz",
 			timeout => '0',
 			require => Package['wget'];
 		'extract_processmaker':
 			cwd => '/opt/',
-			command => "/bin/tar xzvf processmaker-2.0.45.tar.gz",
+			command => "/bin/tar xzvf processmaker-3.3.0-community.tar.gz",
 			creates => '/opt/processmaker',
 			require => Exec['get_processmaker'];
 	}
@@ -60,22 +60,22 @@ class processmaker {
 	}
 
 	# Copy the pmos conf file
-	file { '/etc/apache2/sites-available/pmos':
+	file { '/etc/apache2/sites-available/pmos.conf':
 		ensure  => present,
-		source  => '/vagrant/files/processmaker/pmos',
+		source  => '/vagrant/files/processmaker/pmos.conf',
 		require => Exec['extract_processmaker'];
 	}
 
 	# Disable the default apache site
 	exec { "disable-apache-default":
-		command => '/usr/sbin/a2dissite default',
+		command => '/usr/sbin/a2dissite 000-default',
 		require => Exec['extract_processmaker'];
 	}
 
 	# Enable the pmos file for apache
 	exec { "enable-pmos":
 		command => '/usr/sbin/a2ensite pmos',
-		require => [ Exec['disable-apache-default'], File['/etc/apache2/sites-available/pmos'] ];
+		require => [ Exec['disable-apache-default'], File['/etc/apache2/sites-available/pmos.conf'] ];
 	}
 
 	# Enable modules for apache and processmaker
@@ -84,7 +84,7 @@ class processmaker {
 	define enable_modules() {
 		exec { $name:
 			command => "/usr/sbin/a2enmod ${name}",
-			require => [ Exec['disable-apache-default'], File['/etc/apache2/sites-available/pmos'] ];
+			require => [ Exec['disable-apache-default'], File['/etc/apache2/sites-available/pmos.conf'] ];
 		}
 	}
 
