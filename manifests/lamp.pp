@@ -36,7 +36,7 @@ class lamp {
 	package { $php_require: ensure => installed, require => Service['mysql'] }
 
 	# Set our own php.ini file with our own parameters
-	file { '/etc/php5/apache2/php.ini':
+	file { '/etc/php/5.6/apache2/php.ini':
 		ensure  => present,
 		source  => "/vagrant/files/php/php.ini",
 		owner => root,
@@ -56,10 +56,10 @@ class lamp {
 
 
 	# disable old php5.5
-	exec {
-		'disable-php5':
-		command => '/usr/sbin/a2dismod php5'
-	}
+	#exec {
+	#	'disable-php5':
+	#	command => '/usr/sbin/a2dismod php5'
+	#}
 
 	# enable php5.6
 	exec {
