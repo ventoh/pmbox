@@ -3,6 +3,8 @@ PMBox stands for ProcessMaker Box, an easy solution to virtualize a server and p
 
 Apart from ProcessMaker, PMBox installs git and PHPMyAdmin as additional tools, so it's ready for plugin development and testing.
 
+Updated to processmaker community 3.3.0 with  php 5.6 and mysql 5.6 
+
 ### Works on any major OS
 From Windows to Linux and Mac OS X, PMBox works without any extra requirements or configuration hassles.
 
